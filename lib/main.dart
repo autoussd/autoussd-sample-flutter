@@ -1,4 +1,3 @@
-import 'package:autoussdflutter/autoussdflutter.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -29,45 +28,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late final AutoUssdFlutter sdk;
+  // TODO #1: Declare AutoUssd SDK reference
   bool ready = false;
 
   _MyHomePageState() {
-    sdk = AutoUssdFlutter(
-      (count) {
-        setState(() {
-          ready = count > 0;
-        });
-      },
-      (result) {
-        if (result.status == ResultStatus.COMPLETED) {
-          Future.microtask(() {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  content: Text(
-                    result.lastContent ?? "Please wait for a confirmation message",
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("Ok"),
-                    ),
-                  ],
-                );
-              },
-            );
-          });
-        } else {
-          debugPrint("AutoUssd SDK Result Status: ${result.status}");
-          debugPrint("AutoUssd SDK Result Session Id: ${result.sessionId}");
-          debugPrint("AutoUssd SDK Result Description: ${result.description}");
-        }
-      },
-    );
+    // TODO #2 Setup AutoUssd SDK instance
   }
 
   @override
@@ -141,10 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       width: 300,
                       child: ElevatedButton(
                         onPressed: () {
-                          // Execute the session with this id
-                          sdk.executeSession(
-                            "60a53f240000000000000000",
-                          );
+                          // TODO #3: Call execute method on the AutoUssd SDK instance
                         },
                         child: const Text(
                           "Check Vodafone Momo Balance",

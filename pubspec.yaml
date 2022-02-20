@@ -10,8 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  autoussdflutter: ^2.0.0-alpha-01
-#    path: ../autoussd-flutter
+#  Add autoussd dependency
 
 dev_dependencies:
   flutter_test:
