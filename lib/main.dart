@@ -75,12 +75,6 @@ class _MyHomePageState extends State<MyHomePage> {
       final amount = int.tryParse(values["amount"]) ?? 0;
       final reference = values["reference"] as String;
 
-      debugPrint("${{
-        "Recipient number": number,
-        "Amount": amount,
-        "Reference": reference,
-      }}");
-
       // TODO #3: Call execute method on the AutoUssd SDK instance
       sdk.executeSession(
         "60a53f240000000000000000",
@@ -192,7 +186,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             height: 64,
                             child: ElevatedButton(
                               onPressed: () {
-                                // TODO #3: Call execute method on the AutoUssd SDK instance
                                 completeTransaction(context);
                               },
                               child: const Text(
