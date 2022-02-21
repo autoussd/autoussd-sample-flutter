@@ -1,3 +1,4 @@
+import 'package:autoussdflutter/autoussdflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -39,10 +40,32 @@ class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey();
 
   // TODO #1: Declare AutoUssd SDK reference
-  bool ready = false;
+  late final AutoUssdFlutter sdk;
+  bool ready = true;
 
   _MyHomePageState() {
     // TODO #2 Setup AutoUssd SDK instance
+    sdk = AutoUssdFlutter(
+      (int count) {
+        setState(() {
+          ready = count > 0;
+        });
+      },
+      (Result result) {
+        if (result.status == ResultStatus.COMPLETED) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Text(result.lastContent ?? "Completed!"),
+              );
+            },
+          );
+        } else {
+          debugPrint("Something went wrong! ${result.status}");
+        }
+      },
+    );
   }
 
   void completeTransaction(BuildContext context) {
@@ -59,6 +82,10 @@ class _MyHomePageState extends State<MyHomePage> {
       }}");
 
       // TODO #3: Call execute method on the AutoUssd SDK instance
+      sdk.executeSession(
+        "60a53f240000000000000000",
+        [number, amount.toString(), reference],
+      );
     }
   }
 
@@ -134,10 +161,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             context,
                             errorText: "Required",
                           ),
-                          FormBuilderValidators.integer(
-                            context,
-                            errorText: "Must be a number",
-                          ),
                         ]),
                       ),
                       const SizedBox(height: 24),
@@ -170,6 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: ElevatedButton(
                               onPressed: () {
                                 // TODO #3: Call execute method on the AutoUssd SDK instance
+                                completeTransaction(context);
                               },
                               child: const Text(
                                 "Complete Transaction",
