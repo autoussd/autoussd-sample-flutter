@@ -169,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             height: 64,
                             child: ElevatedButton(
                               onPressed: () {
-                                // TODO #3: Call execute method on the AutoUssd SDK instance
+                                completeTransaction(context);
                               },
                               child: const Text(
                                 "Complete Transaction",
