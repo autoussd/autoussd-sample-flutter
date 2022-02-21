@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,19 +22,44 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
 
+  const MyHomePage({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
+
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() {
+    return _MyHomePageState();
+  }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey();
+
   // TODO #1: Declare AutoUssd SDK reference
   bool ready = false;
 
   _MyHomePageState() {
     // TODO #2 Setup AutoUssd SDK instance
+  }
+
+  void completeTransaction(BuildContext context) {
+    if (_formKey.currentState!.saveAndValidate()) {
+      final values = _formKey.currentState!.value;
+      final number = values["recipientNumber"] as String;
+      final amount = int.tryParse(values["amount"]) ?? 0;
+      final reference = values["reference"] as String;
+
+      debugPrint("${{
+        "Recipient number": number,
+        "Amount": amount,
+        "Reference": reference,
+      }}");
+
+      // TODO #3: Call execute method on the AutoUssd SDK instance
+    }
   }
 
   @override
@@ -42,79 +69,120 @@ class _MyHomePageState extends State<MyHomePage> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('AutoUssd Flutter Example App'),
+          title: const Text('AutoUssd Sample (Flutter)'),
         ),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(
-                width: 300,
-                child: Text(
-                  "Flutter app demonstrating the use of the AutoUssd Flutter plugin",
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              SizedBox(
-                width: 300,
-                child: Card(
-                  elevation: 8,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 24,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.info_outline_rounded,
-                          size: 36,
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Text.rich(
-                            TextSpan(
-                              children: [
-                                const TextSpan(
-                                  text: "Tap on the button to check the remaining balance on your ",
-                                ),
-                                TextSpan(
-                                  text: "Vodafone Cash wallet",
-                                  style: theme.textTheme.bodyText2?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 36,
+              vertical: 24,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  "AutoUssd Sample",
+                  style: theme.textTheme.headline3?.copyWith(
+                    fontSize: 36,
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              ready
-                  ? SizedBox(
-                      width: 300,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // TODO #3: Call execute method on the AutoUssd SDK instance
-                        },
-                        child: const Text(
-                          "Check Vodafone Momo Balance",
+                const SizedBox(height: 8),
+                Text(
+                  "We'll be using this sample starting app to illustrate how to use the AutoUssd platform",
+                  style: theme.textTheme.bodyText2,
+                ),
+                const SizedBox(height: 24),
+                FormBuilder(
+                  key: _formKey,
+                  initialValue: const {
+                    "recipientNumber": "",
+                    "amount": "",
+                    "reference": "",
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      FormBuilderTextField(
+                        name: "recipientNumber",
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        decoration: const InputDecoration(
+                          label: Text(
+                            "Recipient number",
+                          ),
                         ),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                            context,
+                            errorText: "Required",
+                          ),
+                        ]),
+                        autofocus: true,
                       ),
-                    )
-                  : const CircularProgressIndicator()
-            ],
+                      const SizedBox(height: 24),
+                      FormBuilderTextField(
+                        name: "amount",
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        decoration: const InputDecoration(
+                          label: Text(
+                            "Amount",
+                          ),
+                        ),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                            context,
+                            errorText: "Required",
+                          ),
+                          FormBuilderValidators.integer(
+                            context,
+                            errorText: "Must be a number",
+                          ),
+                        ]),
+                      ),
+                      const SizedBox(height: 24),
+                      FormBuilderTextField(
+                        name: "reference",
+                        keyboardType: TextInputType.text,
+                        textCapitalization: TextCapitalization.sentences,
+                        textInputAction: TextInputAction.done,
+                        decoration: const InputDecoration(
+                          label: Text(
+                            "Reference",
+                          ),
+                        ),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                            context,
+                            errorText: "Required",
+                          ),
+                        ]),
+                      ),
+                      const SizedBox(height: 24),
+                      IgnorePointer(
+                        ignoring: !ready,
+                        child: AnimatedOpacity(
+                          opacity: ready ? 1 : 0.5,
+                          duration: const Duration(milliseconds: 350),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 64,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // TODO #3: Call execute method on the AutoUssd SDK instance
+                              },
+                              child: const Text(
+                                "Complete Transaction",
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
