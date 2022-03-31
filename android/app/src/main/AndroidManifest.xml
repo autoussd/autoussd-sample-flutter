@@ -39,8 +39,7 @@
     <meta-data
       android:name="flutterEmbedding"
       android:value="2" />
-    <meta-data
-      android:name="com.autoussd.APP_ID"
-      android:value="60daf3640000000000000000" />
+
+    <!-- TODO: Add AutoUssd app id meta-data tag -->
   </application>
 </manifest>

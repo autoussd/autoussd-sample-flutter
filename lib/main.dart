@@ -1,9 +1,10 @@
-import 'package:autoussdflutter/autoussdflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
 void main() {
+  // TODO #1 Initialize AutoUssd before app starts
+
   runApp(const MyApp());
 }
 
@@ -38,34 +39,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey();
-
-  // TODO #1: Declare AutoUssd SDK reference
-  late final AutoUssdFlutter sdk;
   bool ready = true;
 
   _MyHomePageState() {
-    // TODO #2 Setup AutoUssd SDK instance
-    sdk = AutoUssdFlutter(
-      (int count) {
-        setState(() {
-          ready = count > 0;
-        });
-      },
-      (Result result) {
-        if (result.status == ResultStatus.COMPLETED) {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                content: Text(result.lastContent ?? "Completed!"),
-              );
-            },
-          );
-        } else {
-          debugPrint("Something went wrong! ${result.status}");
-        }
-      },
-    );
+    // TODO #2 Setup AutoUssd callbacks
   }
 
   void completeTransaction(BuildContext context) {
@@ -76,10 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
       final reference = values["reference"] as String;
 
       // TODO #3: Call execute method on the AutoUssd SDK instance
-      sdk.executeSession(
-        "623455ec64e7d7e68f353334",
-        [number, number, amount.toString(), reference],
-      );
+
     }
   }
 
