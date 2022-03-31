@@ -4,7 +4,7 @@
   <uses-permission android:name="android.permission.INTERNET" />
 
   <application
-    android:label="autoussd_sample_flutter"
+    android:label="AutoUssd Sample (Flutter)"
     android:icon="@mipmap/ic_launcher">
     <activity
       android:name=".MainActivity"
@@ -41,5 +41,8 @@
       android:value="2" />
 
     <!-- TODO: Add AutoUssd app id meta-data tag -->
+    <meta-data
+      android:name="com.autoussd.APP_ID"
+      android:value="60daf3640000000000000000" />
   </application>
 </manifest>

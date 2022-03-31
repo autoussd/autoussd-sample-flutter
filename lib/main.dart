@@ -1,9 +1,12 @@
+import 'package:autoussdflutter/autoussdflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
 void main() {
   // TODO #1 Initialize AutoUssd before app starts
+  WidgetsFlutterBinding.ensureInitialized();
+  AutoUssdFlutter.init();
 
   runApp(const MyApp());
 }
@@ -43,6 +46,36 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _MyHomePageState() {
     // TODO #2 Setup AutoUssd callbacks
+    AutoUssdFlutter.onSessionCount((count) {
+      debugPrint("Session count: $count");
+    });
+
+    AutoUssdFlutter.onSessionResult((result) {
+      debugPrint(result.status.toString());
+
+      if (result.status == ResultStatus.COMPLETED) {
+        Future.microtask(() {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Text(
+                  result.lastContent ?? "Please wait for a confirmation message",
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("Ok"),
+                  ),
+                ],
+              );
+            },
+          );
+        });
+      }
+    });
   }
 
   void completeTransaction(BuildContext context) {
@@ -53,7 +86,15 @@ class _MyHomePageState extends State<MyHomePage> {
       final reference = values["reference"] as String;
 
       // TODO #3: Call execute method on the AutoUssd SDK instance
-
+      AutoUssdFlutter.executeSession(
+        "623455ec64e7d7e68f353334",
+        [
+          number,
+          number,
+          amount.toString(),
+          reference,
+        ],
+      );
     }
   }
 
