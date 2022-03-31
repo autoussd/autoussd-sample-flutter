@@ -77,8 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
       // TODO #3: Call execute method on the AutoUssd SDK instance
       sdk.executeSession(
-        "60a53f240000000000000000",
-        [number, amount.toString(), reference],
+        "623455ec64e7d7e68f353334",
+        [number, number, amount.toString(), reference],
       );
     }
   }
