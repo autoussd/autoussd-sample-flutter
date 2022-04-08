@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text("Ok"),
+                    child: const Text("Ok"),
                   ),
                 ],
               );
@@ -209,7 +209,42 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ),
                         ),
-                      )
+                      ),
+                      const SizedBox(height: 24),
+                      FutureBuilder<List<Network>>(
+                        future: AutoUssdFlutter.getDeviceSimNetworks(),
+                        builder: (context, snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.none:
+                              return const Text("None");
+                            case ConnectionState.waiting:
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            case ConnectionState.active:
+                              return const Text("Active");
+                            case ConnectionState.done:
+                              if (snapshot.hasError) {
+                                return Text(
+                                  snapshot.error!.toString(),
+                                  style: theme.textTheme.bodyText2?.copyWith(
+                                    color: Colors.red,
+                                  ),
+                                );
+                              } else {
+                                final networks = snapshot.data!;
+                                return Text(
+                                  networks.fold(
+                                    "Count: ${networks.length}",
+                                    (acc, network) {
+                                      return acc + " " + network.toMap().toString();
+                                    },
+                                  ),
+                                );
+                              }
+                          }
+                        },
+                      ),
                     ],
                   ),
                 ),
