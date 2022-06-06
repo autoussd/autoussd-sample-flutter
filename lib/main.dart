@@ -3,8 +3,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
 void main() {
-  // TODO #1 Initialize AutoUssd before app starts
-
   runApp(const MyApp());
 }
 
@@ -42,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool ready = true;
 
   _MyHomePageState() {
-    // TODO #2 Setup AutoUssd callbacks
+    // TODO #1 Setup AutoUssd callbacks
   }
 
   void completeTransaction(BuildContext context) {
@@ -52,8 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
       final amount = int.tryParse(values["amount"]) ?? 0;
       final reference = values["reference"] as String;
 
-      // TODO #3: Call execute method on the AutoUssd SDK instance
-
+      // TODO #2: Call execute method on the AutoUssd SDK instance
     }
   }
 
