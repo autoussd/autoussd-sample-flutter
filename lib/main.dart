@@ -4,9 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
 void main() {
-  // TODO #1 Initialize AutoUssd before app starts
   WidgetsFlutterBinding.ensureInitialized();
-  AutoUssdFlutter.init();
 
   runApp(const MyApp());
 }
@@ -45,12 +43,12 @@ class _MyHomePageState extends State<MyHomePage> {
   bool ready = true;
 
   _MyHomePageState() {
-    // TODO #2 Setup AutoUssd callbacks
-    AutoUssdFlutter.onSessionCount((count) {
+    // TODO #1 Setup AutoUssd listeners
+    AutoUssdFlutter.getInstance().registerSessionCountListener((count) {
       debugPrint("Session count: $count");
     });
 
-    AutoUssdFlutter.onSessionResult((result) {
+    AutoUssdFlutter.getInstance().registerSessionResultListener((result) {
       debugPrint(result.status.toString());
 
       if (result.status == ResultStatus.COMPLETED) {
@@ -85,15 +83,14 @@ class _MyHomePageState extends State<MyHomePage> {
       final amount = int.tryParse(values["amount"]) ?? 0;
       final reference = values["reference"] as String;
 
-      // TODO #3: Call execute method on the AutoUssd SDK instance
-      AutoUssdFlutter.executeSession(
-        "623455ec64e7d7e68f353334",
-        [
-          number,
-          number,
-          amount.toString(),
-          reference,
-        ],
+      // TODO #2: Call execute method on the AutoUssd SDK instance
+      AutoUssdFlutter.getInstance().executeSession(
+        "629e05e1751c102d57c53c0d",
+        {
+          "number": number,
+          "amount": amount.toString(),
+          "reference": reference,
+        },
       );
     }
   }
@@ -212,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       const SizedBox(height: 24),
                       FutureBuilder<List<Network>>(
-                        future: AutoUssdFlutter.getDeviceSimNetworks(),
+                        future: AutoUssdFlutter.getInstance().getDeviceSimNetworks(),
                         builder: (context, snapshot) {
                           switch (snapshot.connectionState) {
                             case ConnectionState.none:
