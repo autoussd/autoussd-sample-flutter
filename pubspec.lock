@@ -14,7 +14,7 @@ packages:
       name: autoussdflutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0-alpha-02"
+    version: "4.0.0-alpha-09"
   boolean_selector:
     dependency: transitive
     description:

@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
 void main() {
+  // TODO #1: Initialize WidgetsFlutterBinding
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(const MyApp());
@@ -43,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool ready = true;
 
   _MyHomePageState() {
-    // TODO #1 Setup AutoUssd listeners
+    // TODO #2: Setup AutoUssd callbacks
     AutoUssdFlutter.getInstance().registerSessionCountListener((count) {
       debugPrint("Session count: $count");
     });
@@ -83,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
       final amount = int.tryParse(values["amount"]) ?? 0;
       final reference = values["reference"] as String;
 
-      // TODO #2: Call execute method on the AutoUssd SDK instance
+      // TODO #3: Execute session with the AutoUssd SDK
       AutoUssdFlutter.getInstance().executeSession(
         "629e05e1751c102d57c53c0d",
         {

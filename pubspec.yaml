@@ -12,7 +12,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_form_builder: ^7.1.1
   form_builder_validators: ^7.6.1
-  autoussdflutter: ^4.0.0-alpha-02
+  autoussdflutter: ^4.0.0-alpha-09
 
 dev_dependencies:
   flutter_test:
